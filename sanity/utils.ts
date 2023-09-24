@@ -30,7 +30,6 @@ export function buildQuery(params: BuildQueryParams) {
           .join(" && ")})][${offset}...${limit}]`
       : `${conditions[0]}][${offset}...${limit}]`;
 
-  console.log(finalquery);
   return finalquery;
 }
 
