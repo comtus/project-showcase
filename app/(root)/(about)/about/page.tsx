@@ -1,6 +1,6 @@
 const page = () => {
   return (
-    <main className="flex-center p-5 mx-auto w-full max-w-screen-2xl flex-col">
+    <main className="flex-center p-10 mx-auto w-full max-w-screen-2xl flex-col">
       <section className="nav-padding w-full">
         <div className="flex-center relative min-h-[274px] w-full flex-col rounded-xl bg-banner bg-cover bg-center text-center">
           <h1 className="sm:heading1 heading2 mb-4 text-center text-white">
