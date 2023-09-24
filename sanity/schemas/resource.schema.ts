@@ -16,7 +16,6 @@ const schema = {
       type: "slug",
       options: {
         source: "title",
-        maxLength: 96,
       },
     },
     {
@@ -46,7 +45,7 @@ const schema = {
       type: "string",
       validation: (Rule: any) => Rule.required(),
       options: {
-        list: ["frontend", "backend", "nextjs-13", "fullstack", "other"],
+        list: ["all", "frontend", "backend", "nextjs-13", "fullstack", "other"],
       },
     },
   ],

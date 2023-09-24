@@ -1,13 +1,35 @@
 "use client";
-import React, { useState } from "react";
+import { formUrlQuery } from "@/sanity/utils";
+import { useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 
 const links = ["all", "Nextjs-13", "frontend", "backend", "fullstack"];
 
 const Filters = () => {
   const [active, setActive] = useState("");
+  const searchParams = useSearchParams();
 
-  const handleFilter = (Link: string) => {
-    setActive(Link);
+  const router = useRouter();
+
+  const handleFilter = (link: string) => {
+    let newUrl = "";
+
+    if (active === link) {
+      setActive("");
+      newUrl = formUrlQuery({
+        params: searchParams.toString(),
+        keysToRemove: ["category"],
+        value: null,
+      });
+    } else {
+      setActive(link);
+      newUrl = formUrlQuery({
+        params: searchParams.toString(),
+        key: "category",
+        value: link.toLowerCase(),
+      });
+    }
+    router.push(newUrl, { scroll: false });
   };
 
   return (

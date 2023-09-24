@@ -1,17 +1,31 @@
 import Filters from "@/components/Filters";
+import Header from "@/components/Header";
+
 import ResourceCard from "@/components/ResourceCard";
 import SearchForm from "@/components/SearchForm";
-import { getResources } from "@/sanity/actions";
+import { getResources, getResourcesPlaylist } from "@/sanity/actions";
 import React from "react";
 
-const page = async () => {
+export const revalidate = 300;
+
+interface Props {
+  searchParams: { [key: string]: string | undefined };
+}
+
+const page = async ({ searchParams }: Props) => {
+  // if (!searchParams.query && !searchParams.category) {
+  //   searchParams.category = "all";
+  // }
+  // console.log("searchParams --", searchParams.query, searchParams.category);
   const resources = await getResources({
-    query: "",
-    category: "",
+    query: searchParams?.query || "",
+    category: searchParams?.category || "",
     page: "1",
   });
 
-  //console.log(resources);
+  const resourcesPlaylist = await getResourcesPlaylist();
+
+  console.log(resourcesPlaylist);
 
   return (
     <main className="flex-center p-10 mx-auto w-full max-w-screen-2xl flex-col">
@@ -24,10 +38,39 @@ const page = async () => {
         <SearchForm />
       </section>
       <Filters />
-      <section className="flex flex-center mt-6 w-full flex-col sm:mt-10">
-        <div className="flex mt-10 w-full flex-wrap justify-center gap-10 sm:justify-start">
-          {resources?.length > 0 ? (
-            resources.map((resource: any) => (
+
+      {(searchParams?.query || searchParams?.category) && (
+        <section className="flex flex-center mt-6 w-full flex-col sm:mt-10">
+          <Header
+            query={searchParams?.query || ""}
+            category={searchParams?.category || ""}
+          />
+          <div className="flex mt-10 w-full flex-wrap justify-center gap-10 sm:justify-start">
+            {resources?.length > 0 ? (
+              resources.map((resource: any) => (
+                <ResourceCard
+                  key={resource._id}
+                  title={resource.title}
+                  id={resource._id}
+                  image={resource.image}
+                  downloadLink={resource.downloadLink}
+                  views={resource.views}
+                />
+              ))
+            ) : (
+              <p className="body-regular text-white-400">No resources found</p>
+            )}
+          </div>
+        </section>
+      )}
+      {resourcesPlaylist.map((item: any) => (
+        <section
+          key={item._id}
+          className="flex-center mt-6 w-full flex-col sm:mt-20"
+        >
+          <h1 className="heading3 self-start text-white-800">{item.title}</h1>
+          <div className="mt-12 flex w-full flex-wrap justify-center gap-16 sm:justify-start">
+            {item.resources.map((resource: any) => (
               <ResourceCard
                 key={resource._id}
                 title={resource.title}
@@ -36,12 +79,10 @@ const page = async () => {
                 downloadLink={resource.downloadLink}
                 views={resource.views}
               />
-            ))
-          ) : (
-            <p className="body-regular text-white-400">No resources found</p>
-          )}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
+      ))}
     </main>
   );
 };

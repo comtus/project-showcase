@@ -4,6 +4,11 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Projects",
   description: "Project Portfolio",
+  other: {
+    "theme-color": "#0d1117",
+    "color-scheme": "dark only",
+    "og:type": "website",
+  },
 };
 
 export default function RootLayout({
